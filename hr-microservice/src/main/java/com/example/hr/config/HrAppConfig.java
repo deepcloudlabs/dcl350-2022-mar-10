@@ -11,7 +11,8 @@ import com.example.hr.repository.EmployeeRepository;
 @Configuration
 public class HrAppConfig {
 	@Bean
-	public HrApplication hrApp(EmployeeRepository employeeRepository, 
+	public HrApplication createHrApplication(
+			EmployeeRepository employeeRepository, 
 			EventPublisher eventPublisher) {
 		return new StandardHrApplication(employeeRepository, eventPublisher);
 	}

@@ -1,35 +1,20 @@
-package com.example.hr.dto.request;
-
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+package com.example.hr.dto.response;
 
 import com.example.hr.domain.Department;
 import com.example.hr.domain.JobStyle;
-import com.example.hr.validation.Iban;
-import com.example.hr.validation.TcKimlikNo;
 
-public class HireEmployeeRequest {
-	@TcKimlikNo
+public class EmployeeResponse {
 	private String identity;
-	@NotBlank
 	private String firstName;
-	@NotBlank
 	private String lastName;
-	@Iban
 	private String iban;
-	@Min(4_500)
 	private double salary;
-	@NotNull
 	private JobStyle jobStyle;
 	private String photo;
-	@NotNull
 	private Department department;
-	@Max(2006)
 	private int birthYear;
 
-	public HireEmployeeRequest() {
+	public EmployeeResponse() {
 	}
 
 	public String getIdentity() {
@@ -106,7 +91,7 @@ public class HireEmployeeRequest {
 
 	@Override
 	public String toString() {
-		return "HireEmployeeRequest [identity=" + identity + ", firstName=" + firstName + ", lastName=" + lastName
+		return "EmployeeResponse [identity=" + identity + ", firstName=" + firstName + ", lastName=" + lastName
 				+ ", iban=" + iban + ", salary=" + salary + ", jobStyle=" + jobStyle + ", department=" + department
 				+ ", birthYear=" + birthYear + "]";
 	}
