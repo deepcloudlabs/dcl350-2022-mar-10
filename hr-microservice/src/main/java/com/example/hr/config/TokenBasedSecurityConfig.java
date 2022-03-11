@@ -1,5 +1,7 @@
 package com.example.hr.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -17,23 +19,25 @@ import com.example.hr.filter.JwtFilter;
 @Configuration
 @ConditionalOnProperty(value = "securityType", havingValue = "jwt")
 public class TokenBasedSecurityConfig extends WebSecurityConfigurerAdapter {
+	private final Logger logger = LoggerFactory.getLogger(TokenBasedSecurityConfig.class);
+
 	@Value("${spring.security.user.name}")
 	private String username;
 	@Value("${jwt.secret}")
 	private String secret;
 	
-	@Value("${spring.security.user.password}")
-	private String password;
-
+	@Autowired
+	private UserDetailsService userDetailsService;
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		System.err.println("Configuring token based security");
-		http.csrf().disable().authorizeRequests()
-		.antMatchers("/hr/api/v1/login").permitAll()
-		.anyRequest().authenticated()
-				.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(new JwtFilter(secret,userDetailsService),UsernamePasswordAuthenticationFilter.class);
+		logger.info("Configuring Token-Based Security");
+		http.csrf().disable()
+		           .authorizeRequests()
+		           .antMatchers("/api/v1/login").permitAll()
+		           .anyRequest().authenticated().and()
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER);
+		http.addFilterBefore(new JwtFilter(secret, userDetailsService), UsernamePasswordAuthenticationFilter.class);
 	}
 
 	@Override
@@ -42,7 +46,4 @@ public class TokenBasedSecurityConfig extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 
-	@Autowired
-	private UserDetailsService userDetailsService;
-	
 }

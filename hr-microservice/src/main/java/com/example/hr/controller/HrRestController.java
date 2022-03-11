@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,6 +31,8 @@ import com.example.hr.validation.TcKimlikNo;
 @CrossOrigin
 // Adapter -> HTTP Protocol <- mapping -> Java Class Methods
 public class HrRestController {
+	private final Logger logger = LoggerFactory.getLogger(HrRestController.class);
+
 	private HrService hrService;
 	
 	public HrRestController(HrService hrService) {
@@ -39,7 +43,7 @@ public class HrRestController {
 	@GetMapping("{identityNo}")
 	public EmployeeResponse getEmployeeInfo(
 			@PathVariable @TcKimlikNo String identityNo, HttpServletRequest request) {
-		System.err.println("Session: "+request.getSession().getId());
+		logger.info("Receiving a request from the session {}.",request.getSession().getId());
 		return hrService.findEmployeeByIdentity(identityNo);
 	}
 	
