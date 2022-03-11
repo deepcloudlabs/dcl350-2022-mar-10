@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.hr.application.HrApplication;
 import com.example.hr.domain.Employee;
+import com.example.hr.domain.IdentityNo;
 import com.example.hr.dto.request.HireEmployeeRequest;
 import com.example.hr.dto.request.IncreaseSalaryRequest;
 import com.example.hr.dto.response.EmployeeResponse;
@@ -30,18 +31,23 @@ public class HrService {
 	}
 
 	public EmployeeResponse findEmployeeByIdentity(String identityNo) {
-		// TODO Auto-generated method stub
-		return null;
+		var employee = hrApplication.getEmployeeInformation(IdentityNo.valueOf(identityNo))				
+				.orElseThrow(() -> new IllegalArgumentException("Employee does not exist."));
+		return modelMapper.map(employee, EmployeeResponse.class);
 	}
 
 	public EmployeeResponse fireEmployee(String identityNo) {
-		// TODO Auto-generated method stub
-		return null;
+		var firedEmployee = hrApplication.fireEmployee(IdentityNo.valueOf(identityNo))				
+				.orElseThrow(() -> new IllegalArgumentException("Employee does not exist."));
+		return modelMapper.map(firedEmployee, EmployeeResponse.class);
 	}
 
 	public List<EmployeeResponse> updateSalaryInDepartment(IncreaseSalaryRequest request) {
-		// TODO Auto-generated method stub
-		return null;
+		return hrApplication.increaseSalary(request.getDepartment(), 
+				                            request.getRate())
+		             .stream()
+		             .map( emp -> modelMapper.map(emp, EmployeeResponse.class))
+		             .toList();
 	}
 
 }
