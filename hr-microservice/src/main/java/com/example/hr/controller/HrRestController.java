@@ -2,6 +2,8 @@ package com.example.hr.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,7 +38,8 @@ public class HrRestController {
 	// GET http://localhost:8100/hr/api/v1/employees/11111111110
 	@GetMapping("{identityNo}")
 	public EmployeeResponse getEmployeeInfo(
-			@PathVariable @TcKimlikNo String identityNo) {
+			@PathVariable @TcKimlikNo String identityNo, HttpServletRequest request) {
+		System.err.println("Session: "+request.getSession().getId());
 		return hrService.findEmployeeByIdentity(identityNo);
 	}
 	
