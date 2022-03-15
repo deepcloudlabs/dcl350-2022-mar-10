@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
+@ConditionalOnProperty(value="loadBalancing", havingValue = "manual")
 public class LotteryClientService {
 	private static final String REST_API_URL = "http://%s:%d/numbers?column=10";
 	private RestTemplate restTemplate;
@@ -29,9 +31,15 @@ public class LotteryClientService {
 		instances = discoveryClient.getInstances("lottery");
 	}
 	
-    // URL : I) server-side load balancing -> dns/ip:port 
-	//  i) hardware: netscaler, f5 
-	// ii) software: httpd, nginx,haproxy 
+    // URL : 
+	
+	// I) Server-side load balancing -> dns/ip:port 
+	//   i) hardware: netscaler, f5 
+	//  ii) software: httpd, nginx,haproxy 
+	// iii) api gateway -> Zuul -- reactive --> Spring Cloud Gateway
+
+	// Reactive Programming, Reactive System, Reactive MicroService
+	
 	// II) Client-side load balancing -> Consumer -> List of Instances -> Registry Server
 	//     Registry Server: Service Provider -> Lottery MicroService 
 	//     Spring Cloud -> Eureka Server -> Netflix OSS
