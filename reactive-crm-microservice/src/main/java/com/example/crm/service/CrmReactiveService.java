@@ -45,7 +45,7 @@ public class CrmReactiveService {
 
 	public Mono<CustomerResponse> removeCustomer(String identity) {
 		return customerRepository.findById(identity)
-		                  .doOnNext(cust -> customerRepository.delete(cust))
+		                  .doOnNext(cust -> customerRepository.delete(cust).subscribe(System.out::println))
 		                  .map(CUSTOMER_DOCUMENT_TO_CUSTOMER_RESPONSE_MAPPER);
 	}
 

@@ -1,0 +1,8 @@
+curl -X POST "localhost:9100/customers" -d "{\"identity\": \"1\", \"fullname\": \"jack bauer\", \"email\": \"jack@example.com\", \"phone\": \"+90212555555\", \"birthYear\": 1965}" -H "Accept: application/json" -H "Content-Type: application/json"
+curl -X GET "localhost:9100/customers/1" -H "Accept: application/json"
+curl -X GET "localhost:9100/customers?pageNo=0&pageSize=10" -H "Accept: application/json"
+curl -X POST "localhost:9100/customers" -d "{\"identity\": \"2\", \"fullname\": \"kate austen\", \"email\": \"kate@example.com\", \"phone\": \"+902164444444\", \"birthYear\": 1986}" -H "Accept: application/json" -H "Content-Type: application/json"
+curl -X GET "localhost:9100/customers/2" -H "Accept: application/json"
+curl -X GET "localhost:9100/customers?pageNo=0&pageSize=10" -H "Accept: application/json"
+curl -X DELETE "localhost:9100/customers/1" -H "Accept: application/json"
+curl -X GET "localhost:9100/customers?pageNo=0&pageSize=10" -H "Accept: application/json"
