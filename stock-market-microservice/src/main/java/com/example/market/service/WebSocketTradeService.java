@@ -3,8 +3,7 @@ package com.example.market.service;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.event.EventListener;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -12,25 +11,18 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import com.example.market.domain.Trade;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Service
 public class WebSocketTradeService implements WebSocketHandler {
 	private Map<String,WebSocketSession> sessions = 
 			new ConcurrentHashMap<>();
-	@Autowired
-	private ObjectMapper mapper;
 	
-	@EventListener
-	public void listenTradeEvent(Trade event) {
+	@KafkaListener(topics = "stock-trades")
+	public void listenTradeEvent(String trade) {
 		sessions.values()
 		        .parallelStream()
 		        .forEach( session -> {
 		        	try {
-		        		var tradeAsJson =
-		        				mapper.writeValueAsString(event);
-		        		var wsm = new TextMessage(tradeAsJson);
+		        		var wsm = new TextMessage(trade);
 		        		session.sendMessage(wsm);		        		
 		        	}catch (Exception e) {
 		        		System.err.println("Error while convertion event to json: "+e.getMessage());
