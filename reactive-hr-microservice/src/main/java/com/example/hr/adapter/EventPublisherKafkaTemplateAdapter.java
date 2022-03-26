@@ -1,5 +1,7 @@
 package com.example.hr.adapter;
 
+import java.util.concurrent.CompletableFuture;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -24,14 +26,15 @@ public class EventPublisherKafkaTemplateAdapter implements EventPublisher {
 	}
 
 	@Override
-	public void publish(EmployeeEvent employeeEvent) {
-		try {
-			var employeeEventAsJson = objectMapper.writeValueAsString(employeeEvent);
-			kafkaTemplate.send(hrEventTopic, employeeEventAsJson);
-		} catch (JsonProcessingException e) {
-			System.err.println(e.getMessage());
-		}
-
+	public CompletableFuture<Void> publish(EmployeeEvent employeeEvent) {
+		return CompletableFuture.runAsync( () -> {		
+			try {
+				var employeeEventAsJson = objectMapper.writeValueAsString(employeeEvent);
+				kafkaTemplate.send(hrEventTopic, employeeEventAsJson);
+			} catch (JsonProcessingException e) {
+				System.err.println(e.getMessage());
+			}
+		});
 	}
 
 }

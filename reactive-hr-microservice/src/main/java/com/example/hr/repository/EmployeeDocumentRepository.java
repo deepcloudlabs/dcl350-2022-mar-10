@@ -1,14 +1,14 @@
 package com.example.hr.repository;
 
-import java.util.List;
-
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 
 import com.example.hr.document.EmployeeDocument;
 import com.example.hr.domain.Department;
 
-public interface EmployeeDocumentRepository extends MongoRepository<EmployeeDocument, String> {
+import reactor.core.publisher.Flux;
 
-	List<EmployeeDocument> findAllByDepartment(Department department);
+public interface EmployeeDocumentRepository extends ReactiveMongoRepository<EmployeeDocument, String> {
+
+	Flux<EmployeeDocument> findAllByDepartment(Department department);
 
 }
